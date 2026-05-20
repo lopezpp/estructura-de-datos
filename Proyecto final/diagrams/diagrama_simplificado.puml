@@ -1,0 +1,31 @@
+@startuml
+' Diagrama PlantUML simplificado del proyecto
+skinparam handwritten false
+
+package estructuras {
+
+Persona <|-- Estudiante
+Persona <|-- Profesor
+
+SistemaAcademico --> Estudiante : manages 1..*
+SistemaAcademico --> Materia : manages 1..*
+SistemaAcademico --> Aula : manages 1..*
+SistemaAcademico o-- Facultad : contains [5]
+SistemaAcademico --> DijkstraCaminoCorto : uses
+SistemaAcademico --> GestorPilasDeshacer : historial
+
+Materia "1" o-- "0..*" Estudiante : inscritos
+Materia "1" o-- "0..*" Estudiante : colaEspera
+Materia *-- ListaEnlazada : prerrequisitos
+
+GestorPilasDeshacer o-- OperacionDeshacible
+OperacionInscribir ..|> OperacionDeshacible
+OperacionCancelarInscripcion ..|> OperacionDeshacible
+OperacionRegistrarNota ..|> OperacionDeshacible
+OperacionEliminarEstudiante ..|> OperacionDeshacible
+OperacionCambioHorario ..|> OperacionDeshacible
+
+LectorCsvInscripciones --> SolicitudInscripcion : produce 0..*
+
+}
+@enduml
