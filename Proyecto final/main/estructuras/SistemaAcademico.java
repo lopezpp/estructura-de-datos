@@ -515,6 +515,9 @@ public class SistemaAcademico {
         establecerDistanciaSimetrica(3, 4, 95);
 
         registrarAula(new Aula("101", 40));
+        registrarAula(new Aula("102", 35));
+        registrarAula(new Aula("103", 30));
         registrarAula(new Aula("AuditorioCentral", 120));
+        registrarAula(new Aula("Laboratorio1", 20));
     }
 }

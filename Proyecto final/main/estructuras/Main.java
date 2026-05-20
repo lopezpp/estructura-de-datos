@@ -35,18 +35,20 @@ public final class Main {
                         case "10" -> inscribir(sc, sistema);
                         case "11" -> cancelarInscripcion(sc, sistema);
                         case "12" -> mostrarCola(sc, sistema);
-                        case "13" -> reservarHorario(sc, sistema);
-                        case "14" -> liberarHorario(sc, sistema);
-                        case "15" -> consultarHorario(sc, sistema);
-                        case "16" -> agregarConexionEdificios(sc, sistema);
-                        case "17" -> calcularRuta(sc, sistema);
-                        case "18" -> registrarNota(sc, sistema);
-                        case "19" -> verReporte(sc, sistema);
-                        case "20" -> atrasReporte(sistema);
-                        case "21" -> sistema.deshacerUltimaOperacionGlobal();
-                        case "22" -> sistema.rehacerUltimaOperacionGlobal();
-                        case "23" -> procesarCsv(sc, sistema);
-                        case "24" -> listarDatosEjemplo(sistema);
+                        case "13" -> mostrarAulas(sistema);
+                        case "14" -> mostrarAulasDisponibles(sc, sistema);
+                        case "15" -> reservarHorario(sc, sistema);
+                        case "16" -> liberarHorario(sc, sistema);
+                        case "17" -> consultarHorario(sc, sistema);
+                        case "18" -> agregarConexionEdificios(sc, sistema);
+                        case "19" -> calcularRuta(sc, sistema);
+                        case "20" -> registrarNota(sc, sistema);
+                        case "21" -> verReporte(sc, sistema);
+                        case "22" -> atrasReporte(sistema);
+                        case "23" -> sistema.deshacerUltimaOperacionGlobal();
+                        case "24" -> sistema.rehacerUltimaOperacionGlobal();
+                        case "25" -> procesarCsv(sc, sistema);
+                        case "26" -> listarDatosEjemplo(sistema);
                         case "0" -> salir = true;
                         default -> System.out.println("Opcion no valida.");
                     }
@@ -90,23 +92,25 @@ public final class Main {
         System.out.println("11. Cancelar inscripcion");
         System.out.println("12. Mostrar cola de espera");
         System.out.println("=== GESTION DE HORARIOS ===");
-        System.out.println("13. Reservar horario en aula");
-        System.out.println("14. Liberar horario");
-        System.out.println("15. Consultar disponibilidad");
+        System.out.println("13. Mostrar aulas");
+        System.out.println("14. Mostrar aulas disponibles");
+        System.out.println("15. Reservar horario en aula");
+        System.out.println("16. Liberar horario");
+        System.out.println("17. Consultar disponibilidad");
         System.out.println("=== RUTAS ENTRE EDIFICIOS ===");
-        System.out.println("16. Agregar conexion entre edificios");
-        System.out.println("17. Calcular ruta mas corta");
+        System.out.println("18. Agregar conexion entre edificios");
+        System.out.println("19. Calcular ruta mas corta");
         System.out.println("=== REPORTES ACADEMICOS ===");
-        System.out.println("18. Registrar nota");
-        System.out.println("19. Ver reporte academico");
-        System.out.println("20. Navegador de reportes (atras)");
+        System.out.println("20. Registrar nota");
+        System.out.println("21. Ver reporte academico");
+        System.out.println("22. Navegador de reportes (atras)");
         System.out.println("=== SISTEMA DESHACER/REHACER ===");
         System.out.println("21. Deshacer ultima operacion global");
         System.out.println("22. Rehacer ultima operacion global");
         System.out.println("=== PROCESAMIENTO POR LOTES ===");
-        System.out.println("23. Procesar archivo CSV");
+        System.out.println("25. Procesar archivo CSV");
         System.out.println("=== UTIL ===");
-        System.out.println("24. Listar edificios, aulas y facultades de ejemplo");
+        System.out.println("26. Listar edificios, aulas y facultades de ejemplo");
         System.out.println("0. Salir");
         System.out.print("Seleccione una opcion: ");
     }
@@ -233,6 +237,23 @@ public final class Main {
         System.out.print("Codigo materia: ");
         String cod = sc.nextLine().trim();
         System.out.println(sistema.mostrarColaEspera(cod));
+    }
+
+    private static void mostrarAulas(SistemaAcademico sistema) {
+        System.out.println("Aulas registradas:");
+        sistema.getAulasPorNombre().values().forEach(a -> System.out.println(
+                a.getNombre() + " | Capacidad: " + a.getCapacidad()));
+    }
+
+    private static void mostrarAulasDisponibles(Scanner sc, SistemaAcademico sistema) {
+        System.out.print("Dia (0=Domingo .. 6=Sabado): ");
+        int dia = Integer.parseInt(sc.nextLine().trim());
+        System.out.print("Hora (0-23): ");
+        int hora = Integer.parseInt(sc.nextLine().trim());
+        System.out.println("Aulas disponibles en dia " + dia + " hora " + hora + ":");
+        sistema.getAulasPorNombre().values().stream()
+                .filter(a -> a.consultarDisponibilidad(dia, hora))
+                .forEach(a -> System.out.println(a.getNombre() + " | Capacidad: " + a.getCapacidad()));
     }
 
     private static void reservarHorario(Scanner sc, SistemaAcademico sistema) throws HorarioConflictivoException {
