@@ -1,6 +1,8 @@
 package estructuras;
 
 import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.Locale;
 import java.util.Scanner;
 
 
@@ -26,23 +28,25 @@ public final class Main {
                         case "3" -> listarEstudiantes(sistema);
                         case "4" -> eliminarEstudiante(sc, sistema);
                         case "5" -> crearMateria(sc, sistema);
-                        case "6" -> agregarPrerrequisito(sc, sistema);
-                        case "7" -> mostrarPrerrequisitos(sc, sistema);
-                        case "8" -> inscribir(sc, sistema);
-                        case "9" -> cancelarInscripcion(sc, sistema);
-                        case "10" -> mostrarCola(sc, sistema);
-                        case "11" -> reservarHorario(sc, sistema);
-                        case "12" -> liberarHorario(sc, sistema);
-                        case "13" -> consultarHorario(sc, sistema);
-                        case "14" -> agregarConexionEdificios(sc, sistema);
-                        case "15" -> calcularRuta(sc, sistema);
-                        case "16" -> registrarNota(sc, sistema);
-                        case "17" -> verReporte(sc, sistema);
-                        case "18" -> atrasReporte(sistema);
-                        case "19" -> sistema.deshacerUltimaOperacionGlobal();
-                        case "20" -> sistema.rehacerUltimaOperacionGlobal();
-                        case "21" -> procesarCsv(sc, sistema);
-                        case "22" -> listarDatosEjemplo(sistema);
+                        case "6" -> mostrarTodasMaterias(sistema);
+                        case "7" -> crearDiezMaterias(sistema);
+                        case "8" -> agregarPrerrequisito(sc, sistema);
+                        case "9" -> mostrarPrerrequisitos(sc, sistema);
+                        case "10" -> inscribir(sc, sistema);
+                        case "11" -> cancelarInscripcion(sc, sistema);
+                        case "12" -> mostrarCola(sc, sistema);
+                        case "13" -> reservarHorario(sc, sistema);
+                        case "14" -> liberarHorario(sc, sistema);
+                        case "15" -> consultarHorario(sc, sistema);
+                        case "16" -> agregarConexionEdificios(sc, sistema);
+                        case "17" -> calcularRuta(sc, sistema);
+                        case "18" -> registrarNota(sc, sistema);
+                        case "19" -> verReporte(sc, sistema);
+                        case "20" -> atrasReporte(sistema);
+                        case "21" -> sistema.deshacerUltimaOperacionGlobal();
+                        case "22" -> sistema.rehacerUltimaOperacionGlobal();
+                        case "23" -> procesarCsv(sc, sistema);
+                        case "24" -> listarDatosEjemplo(sistema);
                         case "0" -> salir = true;
                         default -> System.out.println("Opcion no valida.");
                     }
@@ -78,29 +82,31 @@ public final class Main {
         System.out.println("4. Eliminar estudiante");
         System.out.println("=== GESTION DE MATERIAS ===");
         System.out.println("5. Crear materia");
-        System.out.println("6. Agregar pre-requisito");
-        System.out.println("7. Mostrar pre-requisitos");
-        System.out.println("8. Inscribir estudiante");
-        System.out.println("9. Cancelar inscripcion");
-        System.out.println("10. Mostrar cola de espera");
+        System.out.println("6. Mostrar todas las materias");
+        System.out.println("7. Crear 10 materias de ejemplo");
+        System.out.println("8. Agregar pre-requisito");
+        System.out.println("9. Mostrar pre-requisitos");
+        System.out.println("10. Inscribir estudiante");
+        System.out.println("11. Cancelar inscripcion");
+        System.out.println("12. Mostrar cola de espera");
         System.out.println("=== GESTION DE HORARIOS ===");
-        System.out.println("11. Reservar horario en aula");
-        System.out.println("12. Liberar horario");
-        System.out.println("13. Consultar disponibilidad");
+        System.out.println("13. Reservar horario en aula");
+        System.out.println("14. Liberar horario");
+        System.out.println("15. Consultar disponibilidad");
         System.out.println("=== RUTAS ENTRE EDIFICIOS ===");
-        System.out.println("14. Agregar conexion entre edificios");
-        System.out.println("15. Calcular ruta mas corta");
+        System.out.println("16. Agregar conexion entre edificios");
+        System.out.println("17. Calcular ruta mas corta");
         System.out.println("=== REPORTES ACADEMICOS ===");
-        System.out.println("16. Registrar nota");
-        System.out.println("17. Ver reporte academico");
-        System.out.println("18. Navegador de reportes (atras)");
+        System.out.println("18. Registrar nota");
+        System.out.println("19. Ver reporte academico");
+        System.out.println("20. Navegador de reportes (atras)");
         System.out.println("=== SISTEMA DESHACER/REHACER ===");
-        System.out.println("19. Deshacer ultima operacion global");
-        System.out.println("20. Rehacer ultima operacion global");
+        System.out.println("21. Deshacer ultima operacion global");
+        System.out.println("22. Rehacer ultima operacion global");
         System.out.println("=== PROCESAMIENTO POR LOTES ===");
-        System.out.println("21. Procesar archivo CSV");
+        System.out.println("23. Procesar archivo CSV");
         System.out.println("=== UTIL ===");
-        System.out.println("22. Listar edificios, aulas y facultades de ejemplo");
+        System.out.println("24. Listar edificios, aulas y facultades de ejemplo");
         System.out.println("0. Salir");
         System.out.print("Seleccione una opcion: ");
     }
@@ -149,6 +155,44 @@ public final class Main {
         int cred = Integer.parseInt(sc.nextLine().trim());
         sistema.registrarMateria(new Materia(cod, nom, cupos, cred));
         System.out.println("Materia creada.");
+    }
+
+    private static void mostrarTodasMaterias(SistemaAcademico sistema) {
+        if (sistema.getMaterias().isEmpty()) {
+            System.out.println("No hay materias registradas.");
+            return;
+        }
+        sistema.getMaterias().values().stream()
+                .sorted(Comparator.comparing(Materia::getCodigo))
+                .forEach(m -> System.out.println(m.getCodigo() + " - " + m.getNombre()
+                        + " | Cupos: " + m.getCuposMaximos()
+                        + " | Creditos: " + m.getCreditos()));
+    }
+
+    private static void crearDiezMaterias(SistemaAcademico sistema) {
+        Materia[] materias = new Materia[] {
+                new Materia("MAT101", "Matematica I", 50, 4),
+                new Materia("MAT102", "Matematica II", 50, 4),
+                new Materia("PROG101", "Programacion I", 45, 5),
+                new Materia("PROG102", "Programacion II", 45, 5),
+                new Materia("FIS101", "Fisica I", 40, 4),
+                new Materia("FIS102", "Fisica II", 40, 4),
+                new Materia("QUI101", "Quimica General", 40, 4),
+                new Materia("ECO101", "Economia", 60, 3),
+                new Materia("ING101", "Ingles Tecnico", 60, 2),
+                new Materia("FAS101", "Fundamentos de Arquitectura de Sistemas", 35, 3)
+        };
+        int creadas = 0;
+        for (Materia m : materias) {
+            if (!sistema.getMaterias().containsKey(m.getCodigo().toUpperCase(Locale.ROOT))) {
+                sistema.registrarMateria(m);
+                creadas++;
+            }
+        }
+        System.out.println("Se agregaron " + creadas + " materias de ejemplo.");
+        if (creadas == 0) {
+            System.out.println("Ya existian todas las materias de ejemplo.");
+        }
     }
 
     private static void agregarPrerrequisito(Scanner sc, SistemaAcademico sistema) {
